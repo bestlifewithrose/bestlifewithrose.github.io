@@ -655,18 +655,6 @@
       <div class="budget-layout">
         <div class="field-group">
           <div class="control-stack">
-            <div class="currency-line">
-              <div>
-                <label>Currency</label>
-                <div class="segment" role="group" aria-label="Currency">
-                  <button class="selected" data-currency="USD">USD</button>
-                  <button data-currency="PHP">PHP</button>
-                </div>
-              </div>
-              <label class="rate-field">Approx. PHP per USD
-                <input type="number" id="exchange-rate" value="58" min="1" step="0.01" />
-              </label>
-            </div>
             <label>Total budget
               <div class="money-wrap"><span class="currency-symbol">$</span><input type="number" id="total-budget" value="2500" min="0" step="1" /></div>
             </label>
@@ -795,9 +783,7 @@
       var state = {
         journey: "",
         bag: "carry",
-        packing: [],
-        currency: "USD",
-        exchangeRate: 58
+        packing: []
       };
 
       var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
@@ -1006,12 +992,10 @@
 
       var categoryColors = ["#A27B39", "#C5A66D", "#7D6946", "#D4BE97", "#8E815F", "#B78F54", "#6A5B40", "#E0CFAF"];
       function money(value) {
-        var code = state.currency;
-        return new Intl.NumberFormat("en-US", { style: "currency", currency: code, maximumFractionDigits: code === "PHP" ? 0 : 2 }).format(value || 0);
+        return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 }).format(value || 0);
       }
       function numericValue(input) { return Math.max(0, Number(input.value) || 0); }
       function updateBudget() {
-        state.exchangeRate = Math.max(1, Number(document.getElementById("exchange-rate").value) || 58);
         var budget = numericValue(document.getElementById("total-budget"));
         var days = Math.max(1, numericValue(document.getElementById("budget-days")));
         var travelers = Math.max(1, numericValue(document.getElementById("travelers")));
@@ -1051,21 +1035,6 @@
       }
 
       Array.prototype.slice.call(document.querySelectorAll("#budget input")).forEach(function (input) { input.addEventListener("input", updateBudget); });
-      Array.prototype.slice.call(document.querySelectorAll("[data-currency]")).forEach(function (button) {
-        button.addEventListener("click", function () {
-          var next = button.getAttribute("data-currency");
-          if (next === state.currency) return;
-          var rate = Math.max(1, Number(document.getElementById("exchange-rate").value) || 58);
-          var factor = next === "PHP" ? rate : 1 / rate;
-          Array.prototype.slice.call(document.querySelectorAll("#total-budget, .category-input")).forEach(function (input) {
-            input.value = Math.round((Number(input.value) || 0) * factor * 100) / 100;
-          });
-          state.currency = next;
-          Array.prototype.slice.call(document.querySelectorAll("[data-currency]")).forEach(function (b) { b.classList.toggle("selected", b === button); });
-          Array.prototype.slice.call(document.querySelectorAll(".currency-symbol")).forEach(function (symbol) { symbol.textContent = next === "PHP" ? "₱" : "$"; });
-          updateBudget();
-        });
-      });
       document.getElementById("plan-trip").addEventListener("click", function () { updateBudget(); showToast("Your trip numbers are up to date."); });
       document.getElementById("save-budget").addEventListener("click", function () { showPage("join"); showToast("Your budget stays ready while this playbook is open."); });
       document.getElementById("preview-email-form").addEventListener("submit", function (event) { event.preventDefault(); });
