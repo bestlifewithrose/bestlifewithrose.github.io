@@ -685,8 +685,6 @@
             <div class="budget-row"><label for="cat-transport">Transport</label><div class="money-wrap"><span class="currency-symbol">$</span><input class="category-input" id="cat-transport" data-category="Transport" type="number" value="150" min="0"></div></div>
             <div class="budget-row"><label for="cat-activities">Activities</label><div class="money-wrap"><span class="currency-symbol">$</span><input class="category-input" id="cat-activities" data-category="Activities" type="number" value="200" min="0"></div></div>
             <div class="budget-row"><label for="cat-shopping">Shopping</label><div class="money-wrap"><span class="currency-symbol">$</span><input class="category-input" id="cat-shopping" data-category="Shopping" type="number" value="0" min="0"></div></div>
-            <div class="budget-row" id="padala-row" hidden><div class="optional-row"><label for="cat-padala">Padala / Family</label><button class="text-button" id="remove-padala">Remove</button></div><div class="money-wrap"><span class="currency-symbol">$</span><input class="category-input" id="cat-padala" data-category="Padala / Family" type="number" value="0" min="0"></div></div>
-            <button class="text-button" id="add-padala" style="justify-self: start; padding: 12px 0">+ Add Padala / Family</button>
             <div class="budget-row"><label for="cat-buffer">Buffer</label><div class="money-wrap"><span class="currency-symbol">$</span><input class="category-input" id="cat-buffer" data-category="Buffer" type="number" value="250" min="0"></div></div>
           </div>
           <div class="button-row" style="margin-top: 22px">
@@ -799,8 +797,7 @@
         bag: "carry",
         packing: [],
         currency: "USD",
-        exchangeRate: 58,
-        padalaVisible: false
+        exchangeRate: 58
       };
 
       var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
@@ -1068,19 +1065,6 @@
           Array.prototype.slice.call(document.querySelectorAll(".currency-symbol")).forEach(function (symbol) { symbol.textContent = next === "PHP" ? "₱" : "$"; });
           updateBudget();
         });
-      });
-      document.getElementById("add-padala").addEventListener("click", function () {
-        state.padalaVisible = true;
-        document.getElementById("padala-row").hidden = false;
-        document.getElementById("add-padala").hidden = true;
-        updateBudget();
-      });
-      document.getElementById("remove-padala").addEventListener("click", function () {
-        state.padalaVisible = false;
-        document.getElementById("cat-padala").value = 0;
-        document.getElementById("padala-row").hidden = true;
-        document.getElementById("add-padala").hidden = false;
-        updateBudget();
       });
       document.getElementById("plan-trip").addEventListener("click", function () { updateBudget(); showToast("Your trip numbers are up to date."); });
       document.getElementById("save-budget").addEventListener("click", function () { showPage("join"); showToast("Your budget stays ready while this playbook is open."); });
